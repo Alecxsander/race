@@ -23,14 +23,7 @@ local player = display.newImageRect("carro1.png", 170,230)
 player.x = display.contentCenterX
 player.y = display.contentHeight-100
 
-local pedra = display.newImageRect("pedra.png", 100,150)
-pedra.x = display.contentCenterX
-pedra.y = display.contentCenterY
-
-local pedra2 = display.newImageRect("pedra.png", 150,200)
-pedra2.x = display.contentCenterX
-pedra2.y = display.contentHeihgt0
-
+-- Botoes
 local buttons = {}
 
 buttons[1] = display.newImage("buttom.png")
@@ -95,8 +88,6 @@ local movimento = function()
     end
     
     posicaoFundoY = posicaoFundoY + velo
-    pedra.y = pedra.y + velo
-    pedra2.y = pedra2.y + velo
     background.y = posicaoFundoY
     
     if background.y > 1500 then
@@ -111,3 +102,44 @@ end
 
 
 Runtime:addEventListener("enterFrame", movimento)
+
+-- Pedra random
+
+local function pedraRandom()
+
+  local random = math.random(5)
+    
+    if(random == 1) then
+        local pedra1 = display.newImageRect("pedra.png", 150,200)
+        pedra1.x = display.contentCenterX
+        pedra1.y = display.contentHeihgt0
+        print("pedra1")
+        
+    elseif (random == 2) then
+        local pedra2 = display.newImageRect("pedra.png", 150,200)
+        pedra2.x = display.contentWidth100
+        pedra2.y = display.contentHeihgt100
+        print("pedra2")
+    
+    elseif(random == 3) then
+        local pedra3 = display.newImageRect("pedra.png", 150,200)
+        pedra3.x = display.contentWidth150
+        pedra3.y = display.contentHeihgt100
+        print("pedra3")
+    
+    elseif (random == 4) then
+        local pedra4 = display.newImageRect("pedra.png", 150,200)
+        pedra4.x = display.contentWidth200
+        pedra4.y = display.contentHeihgt100
+        print("pedra4")
+    
+    elseif (random == 5) then
+        local pedra5 = display.newImageRect("pedra.png", 150,200)
+        pedra5.x = display.contentWidth250
+        pedra5.y = display.contentHeihgt100
+        print("pedra5")
+        
+    end
+end    
+
+timer.performWithDelay(1000, pedraRandom, -1)
