@@ -38,6 +38,72 @@ buttons[2].y = 1100
 buttons[2].rotation = 180
 buttons[1].myName = "right"
 
+
+
+local  function posicaoHorizontalPedra()
+
+	local x = math.random(1,3)
+
+	if x == 1 then
+
+		return 160
+
+	end
+
+	if x == 2 then
+
+	 	return 80
+
+	end
+
+	if x == 3 then
+
+		return 240
+
+	end
+
+
+
+
+
+	end
+
+
+
+local function posicaoVerticalPedra()
+
+	return math.random(-200,-10)
+
+end
+
+local pedra={}
+
+ pedra[1]= display.newImageRect("pedra.png", 150,200)
+ pedra[1].x = posicaoHorizontalPedra
+ pedra[1].y = posicaoVerticalPedra
+        
+
+ pedra[1]= display.newImageRect("pedra.png", 150,200)
+ pedra[1].x = posicaoHorizontalPedra
+ pedra[1].y = posicaoVerticalPedra
+        
+
+ pedra[1]= display.newImageRect("pedra.png", 150,200)
+ pedra[1].x = posicaoHorizontalPedra
+ pedra[1].y = posicaoVerticalPedra
+        
+-- Pedra random
+ function replicacao(i)
+
+	-- body
+
+	pedra[i].y = posicaoVerticalPedra()
+
+	pedra[i].x = posicaoHorizontalPedra()
+
+end
+
+
 local moveLeft = 0
 local moveRight = 0
 
@@ -90,6 +156,25 @@ local movimento = function()
     posicaoFundoY = posicaoFundoY + velo
     background.y = posicaoFundoY
     
+
+    --movimentaçaodas pedras 
+    pedra[1].y = pedra[1].y + velo 
+    pedra[2].y = pedra[2].y + velo 
+    pedra[3].y = pedra[3].y + velo 
+
+
+    -- analisando se algum iconi saiu da tela
+
+local j = 1
+
+for j=1, #pedra do 
+
+	if pedra[j].y > display.contentHeight + 30 then
+		replicacao(j)
+	end
+
+end
+
     if background.y > 1500 then
         posicaoFundoY = 500
     end
@@ -100,13 +185,8 @@ local movimento = function()
 end
 
 
-
-Runtime:addEventListener("enterFrame", movimento)
-
--- Pedra random
-
 local function pedraRandom()
-
+--[[
   local random = math.random(5)
     
     if(random == 1) then
@@ -140,6 +220,9 @@ local function pedraRandom()
         print("pedra5")
         
     end
+
+]]
 end    
 
 timer.performWithDelay(1000, pedraRandom, -1)
+Runtime:addEventListener("enterFrame", movimento)
