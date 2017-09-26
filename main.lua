@@ -23,7 +23,73 @@ local player = display.newImageRect("carro1.png", 170,230)
 player.x = display.contentCenterX
 player.y = display.contentHeight-100
 
--- Botoes
+
+
+
+local  function posicaoHorizontalPedra()
+
+	local x = math.random(1,3)
+
+	if x == 1 then
+		return 384
+
+	end
+
+	if x == 2 then
+	 	return 192
+
+	end
+
+	if x == 3 then
+		return 576
+
+	end
+
+	end
+
+
+
+local function posicaoVerticalPedra()
+
+	return  math.random(-2000,-10)
+
+
+end
+
+local pedra={}
+
+ pedra[1]= display.newImageRect("pedra.png", 150,200)
+ pedra[1].x = posicaoHorizontalPedra
+ pedra[1].y = posicaoVerticalPedra
+        
+
+ pedra[2]= display.newImageRect("pedra.png", 150,200)
+ pedra[2].x = posicaoHorizontalPedra
+ pedra[2].y = posicaoVerticalPedra
+        
+
+ pedra[3]= display.newImageRect("pedra.png", 150,200)
+ pedra[3].x = posicaoHorizontalPedra
+ pedra[3].y = posicaoVerticalPedra
+
+
+local function analisandoVertical( y )
+	-- body
+	-- analisando se alguma pedra saiu da tela
+	local j = 1
+	for j=1, #pedra do 
+
+		if y > pedra[j].y - 700 or y < pedra[j].y + 700  then
+			return y + posicaoVerticalPedra()
+		else
+			return Y  
+		end
+
+	end
+end 
+
+
+ -- Botoes
 local buttons = {}
 
 buttons[1] = display.newImage("buttom.png")
@@ -38,68 +104,16 @@ buttons[2].y = 1100
 buttons[2].rotation = 180
 buttons[1].myName = "right"
 
-
-
-local  function posicaoHorizontalPedra()
-
-	local x = math.random(1,3)
-
-	if x == 1 then
-
-		return 160
-
-	end
-
-	if x == 2 then
-
-	 	return 80
-
-	end
-
-	if x == 3 then
-
-		return 240
-
-	end
-
-
-
-
-
-	end
-
-
-
-local function posicaoVerticalPedra()
-
-	return math.random(-200,-10)
-
-end
-
-local pedra={}
-
- pedra[1]= display.newImageRect("pedra.png", 150,200)
- pedra[1].x = posicaoHorizontalPedra
- pedra[1].y = posicaoVerticalPedra
-        
-
- pedra[1]= display.newImageRect("pedra.png", 150,200)
- pedra[1].x = posicaoHorizontalPedra
- pedra[1].y = posicaoVerticalPedra
-        
-
- pedra[1]= display.newImageRect("pedra.png", 150,200)
- pedra[1].x = posicaoHorizontalPedra
- pedra[1].y = posicaoVerticalPedra
         
 -- Pedra random
  function replicacao(i)
 
 	-- body
-
-	pedra[i].y = posicaoVerticalPedra()
-
 	pedra[i].x = posicaoHorizontalPedra()
+
+	pedra[i].y = analisandoVertical(posicaoVerticalPedra())
+
+
 
 end
 
@@ -158,18 +172,17 @@ local movimento = function()
     
 
     --movimentaçaodas pedras 
+    print(velo)
     pedra[1].y = pedra[1].y + velo 
     pedra[2].y = pedra[2].y + velo 
     pedra[3].y = pedra[3].y + velo 
 
 
-    -- analisando se algum iconi saiu da tela
-
+-- analisando se alguma pedra saiu da tela
 local j = 1
-
 for j=1, #pedra do 
 
-	if pedra[j].y > display.contentHeight + 30 then
+	if pedra[j].y > display.contentHeight + 300 then
 		replicacao(j)
 	end
 
@@ -185,44 +198,6 @@ end
 end
 
 
-local function pedraRandom()
---[[
-  local random = math.random(5)
-    
-    if(random == 1) then
-        local pedra1 = display.newImageRect("pedra.png", 150,200)
-        pedra1.x = display.contentCenterX
-        pedra1.y = display.contentHeihgt0
-        print("pedra1")
-        
-    elseif (random == 2) then
-        local pedra2 = display.newImageRect("pedra.png", 150,200)
-        pedra2.x = display.contentWidth100
-        pedra2.y = display.contentHeihgt100
-        print("pedra2")
-    
-    elseif(random == 3) then
-        local pedra3 = display.newImageRect("pedra.png", 150,200)
-        pedra3.x = display.contentWidth150
-        pedra3.y = display.contentHeihgt100
-        print("pedra3")
-    
-    elseif (random == 4) then
-        local pedra4 = display.newImageRect("pedra.png", 150,200)
-        pedra4.x = display.contentWidth200
-        pedra4.y = display.contentHeihgt100
-        print("pedra4")
-    
-    elseif (random == 5) then
-        local pedra5 = display.newImageRect("pedra.png", 150,200)
-        pedra5.x = display.contentWidth250
-        pedra5.y = display.contentHeihgt100
-        print("pedra5")
-        
-    end
-
-]]
-end    
 
 timer.performWithDelay(1000, pedraRandom, -1)
 Runtime:addEventListener("enterFrame", movimento)
