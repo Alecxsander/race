@@ -67,16 +67,18 @@ local pedra={}
  pedra[1]= display.newImageRect("pedra.png", 150,200)
  pedra[1].x = posicaoHorizontalPedra
  pedra[1].y = posicaoVerticalPedra
+ pedra[1].name = "pedra"
         
-
  pedra[2]= display.newImageRect("pedra.png", 150,200)
  pedra[2].x = posicaoHorizontalPedra
  pedra[2].y = posicaoVerticalPedra
-        
+ pedra[2].name = "pedra"        
 
  pedra[3]= display.newImageRect("pedra.png", 150,200)
  pedra[3].x = posicaoHorizontalPedra
  pedra[3].y = posicaoVerticalPedra
+ pedra[3].name = "pedra"
+
 
 
 local function analisandoVertical( y )
@@ -205,11 +207,30 @@ end
     --player.y = player.y + moveRight
 end
 
+local function onCollision(event)
+	local carro 
+	local pedra
+
+	if (event.object1.name=="player" and event.object2.name=="pedra")then
+		carro = event.object1
+		pedra = event.object2
+
+	elseif (event.object2.name=="player" and event.object1.name=="pedra")then
+		carro = event.object1
+		pedra = event.object2
+
+	end
+	if (carro ~= nil and pedra ~= nil )then
+		composer.gotoScene("menu")
+	end
+
+end
 
 
 timer.performWithDelay(1000, pedraRandom, -1)
 Runtime:addEventListener("enterFrame", movimento)
- 
+ Runtime:addEventListener("onCollision", onCollision)
+
 end
  
  
