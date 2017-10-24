@@ -31,6 +31,7 @@ background.y = posicaoFundoY
 local player = display.newImageRect("carro1.png", 170,230)
 player.x = display.contentCenterX
 player.y = display.contentHeight-100
+physics.addBody(player, "static", {bounce=0})
 
 
 
@@ -68,16 +69,19 @@ local pedra={}
  pedra[1].x = posicaoHorizontalPedra
  pedra[1].y = posicaoVerticalPedra
  pedra[1].name = "pedra"
+ physics.addBody(pedra[1], "static", {bounce=0})
         
  pedra[2]= display.newImageRect("pedra.png", 150,200)
  pedra[2].x = posicaoHorizontalPedra
  pedra[2].y = posicaoVerticalPedra
- pedra[2].name = "pedra"        
+ pedra[2].name = "pedra"      
+ physics.addBody(pedra[2], "static", {bounce=0})  
 
  pedra[3]= display.newImageRect("pedra.png", 150,200)
  pedra[3].x = posicaoHorizontalPedra
  pedra[3].y = posicaoVerticalPedra
  pedra[3].name = "pedra"
+ physics.addBody(pedra[3], "static", {bounce=0})
 
 
 
@@ -130,7 +134,6 @@ local moveLeft = 0
 local moveRight = 0
 
 local touchFunction = function(e)
-    print("entrou")
     
     if e.phase == "began"  then
         if e.target.myName == "right" then
@@ -169,8 +172,6 @@ local movimento = function()
         contador = contador + 1
         velo = velo + 0.1
         score.text = contador
-        --print(contador)
-        print(velo)
         ajuda = 0 
         if velo >= 35 then
         	velo = 35
@@ -207,29 +208,20 @@ end
     --player.y = player.y + moveRight
 end
 
-local function onCollision(event)
-	local carro 
-	local pedra
-
-	if (event.object1.name=="player" and event.object2.name=="pedra")then
-		carro = event.object1
-		pedra = event.object2
-
-	elseif (event.object2.name=="player" and event.object1.name=="pedra")then
-		carro = event.object1
-		pedra = event.object2
-
-	end
-	if (carro ~= nil and pedra ~= nil )then
-		composer.gotoScene("menu")
-	end
-
+function onCollision( self, event)
+		if ("began" ==  event.phase) then
+			local obj1 = event.object1
+			local obj2 = event.object2	
+			if ( ( obj1.myName == "player" and obj2.myName == "pedra" ) or
+             ( obj1.myName == "pedra" and obj2.myName == "player" ) )
+        then
+        composer.gotoscene("menu")
 end
 
 
 timer.performWithDelay(1000, pedraRandom, -1)
 Runtime:addEventListener("enterFrame", movimento)
- Runtime:addEventListener("onCollision", onCollision)
+Runtime:addEventListener( "collision", onCollision )
 
 end
  
