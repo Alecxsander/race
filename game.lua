@@ -1,4 +1,3 @@
-
 local composer = require("composer")
 
 local scene = composer.newScene()
@@ -8,10 +7,15 @@ physics.start()
 
 display.setStatusBar(display.HiddenStatusBar)
 
-
+local player
+local obj1
+local obj2
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
- 
+function gotoMenu()
+	composer.gotoScene("menu")
+	end 
+
 -- create()
 function scene:create( event )
  
@@ -28,11 +32,12 @@ background.y = posicaoFundoY
 
 
 -- declarando p player
-local player = display.newImageRect("carro1.png", 170,230)
+player = display.newImageRect("carro1.png", 170,230)
 player.x = display.contentCenterX
 player.y = display.contentHeight-100
-physics.addBody(player, "static", {bounce=0})
-
+physics.addBody(player, "dynamic", {bounce=0})
+player.gravityScale = 0
+player.myName = "player"
 
 
 
@@ -68,19 +73,19 @@ local pedra={}
  pedra[1]= display.newImageRect("pedra.png", 150,200)
  pedra[1].x = posicaoHorizontalPedra
  pedra[1].y = posicaoVerticalPedra
- pedra[1].name = "pedra"
+ pedra[1].myName = "pedra"
  physics.addBody(pedra[1], "static", {bounce=0})
         
  pedra[2]= display.newImageRect("pedra.png", 150,200)
  pedra[2].x = posicaoHorizontalPedra
  pedra[2].y = posicaoVerticalPedra
- pedra[2].name = "pedra"      
+ pedra[2].myName = "pedra"      
  physics.addBody(pedra[2], "static", {bounce=0})  
 
  pedra[3]= display.newImageRect("pedra.png", 150,200)
  pedra[3].x = posicaoHorizontalPedra
  pedra[3].y = posicaoVerticalPedra
- pedra[3].name = "pedra"
+ pedra[3].myName = "pedra"
  physics.addBody(pedra[3], "static", {bounce=0})
 
 
@@ -165,7 +170,7 @@ local contador = 0
 
 local score = display.newText(contador, 380, -80,native.font,100)
 
-local movimento = function()
+function movimento()
     ajuda = ajuda + velo
         
     if ajuda > 190 then
@@ -203,25 +208,21 @@ end
         posicaoFundoY = 500
     end
 
+
+end
+
+--funcao
+function onCollision( event)
     
-    --player.x = player.x + moveLeft
-    --player.y = player.y + moveRight
-end
-
-function onCollision( self, event)
-		if ("began" ==  event.phase) then
-			local obj1 = event.object1
-			local obj2 = event.object2	
-			if ( ( obj1.myName == "player" and obj2.myName == "pedra" ) or
-             ( obj1.myName == "pedra" and obj2.myName == "player" ) )
-        then
-        composer.gotoscene("menu")
-end
+		if ("began" == event.phase) then
+			if(event.object1.myName == "player" and event.object2.myName == "pedra" or event.object1.myName == "pedra" and event.object2.myName == "player") then
+               gotoMenu()
+            end
+        end
+ end
+--
 
 
-timer.performWithDelay(1000, pedraRandom, -1)
-Runtime:addEventListener("enterFrame", movimento)
-Runtime:addEventListener( "collision", onCollision )
 
 end
  
@@ -237,6 +238,10 @@ function scene:show( event )
  
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
+        timer.performWithDelay(1000, pedraRandom, -1)
+        Runtime:addEventListener("enterFrame", movimento)
+
+        Runtime:addEventListener( "collision", onCollision )
  
     end
 end
@@ -277,4 +282,3 @@ scene:addEventListener( "destroy", scene )
 -- -----------------------------------------------------------------------------------
  
 return scene
-
