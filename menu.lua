@@ -27,7 +27,7 @@ function scene:create( event )
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 
-    local title = display.newImageRect( sceneGroup, "title.png", 700, 200 )
+    local title = display.newImageRect( sceneGroup, "titulo.png", 700, 200 )
     title.x = display.contentCenterX
     title.y = display.contentHeight - 1050
 
@@ -68,7 +68,8 @@ function scene:hide( event )
  
     if ( phase == "will" ) then
         -- Code here runs when the scene is on screen (but is about to go off screen)
- 
+        display.remove(sceneGroup)
+        
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
  

@@ -6,7 +6,7 @@ local physics = require( "physics" )
 physics.start()
 
 display.setStatusBar(display.HiddenStatusBar)
-
+local estadodejogo = 0
 local player
 local obj1
 local obj2
@@ -59,7 +59,7 @@ local  function posicaoHorizontalPedra()
 
 	end
 
-
+--physics.setDrawMode("hybrid")
 
 local function posicaoVerticalPedra()
 
@@ -74,19 +74,19 @@ local pedra={}
  pedra[1].x = posicaoHorizontalPedra
  pedra[1].y = posicaoVerticalPedra
  pedra[1].myName = "pedra"
- physics.addBody(pedra[1], "static", {bounce=0})
+ physics.addBody(pedra[1], "static", {bounce=0,radius = 68})
         
  pedra[2]= display.newImageRect("pedra.png", 150,200)
  pedra[2].x = posicaoHorizontalPedra
  pedra[2].y = posicaoVerticalPedra
  pedra[2].myName = "pedra"      
- physics.addBody(pedra[2], "static", {bounce=0})  
+ physics.addBody(pedra[2], "static", {bounce=0,radius = 68})  
 
  pedra[3]= display.newImageRect("pedra.png", 150,200)
  pedra[3].x = posicaoHorizontalPedra
  pedra[3].y = posicaoVerticalPedra
  pedra[3].myName = "pedra"
- physics.addBody(pedra[3], "static", {bounce=0})
+ physics.addBody(pedra[3], "static", {bounce=0,radius = 68})
 
 
 
@@ -140,6 +140,14 @@ local moveRight = 0
 
 local touchFunction = function(e)
     
+    if e.target.myName == "right" then     
+        moveRight = 10
+         player.x = player.x + moveRight
+    else
+        moveLeft = -10
+        player.x = player.x + moveLeft
+    end
+
     if e.phase == "began"  then
         if e.target.myName == "right" then
             moveRight = 10
@@ -159,10 +167,9 @@ local touchFunction = function(e)
     end
 end
 
-local j=1
-for j=1, #buttons do
-    buttons[j]:addEventListener("touch", touchFunction)
-end
+local gamerover = display.newImage("gamerover.png")
+gamerover.alpha = 0
+
 
 local ajuda = 0
 local velo = 4 
@@ -170,55 +177,125 @@ local contador = 0
 
 local score = display.newText(contador, 380, -80,native.font,100)
 
+
+
+function reiniciar( ... )
+    
+    estadodejogo = 1
+
+    player.x = display.contentCenterX
+    player.y = display.contentHeight-100
+    player.rotation = 0 
+
+
+    pedra[1].x = posicaoHorizontalPedra
+    pedra[1].y = posicaoVerticalPedra
+            
+    
+    pedra[2].x = posicaoHorizontalPedra
+    pedra[2].y = posicaoVerticalPedra
+    
+    pedra[3].x = posicaoHorizontalPedra
+    pedra[3].y = posicaoVerticalPedra
+
+    buttons[1].x = 650
+    buttons[1].y = 1100
+    buttons[1].rotation = 360
+
+    buttons[2].x = 130
+    buttons[2].y = 1100
+    buttons[2].rotation = 180
+    
+    moveLeft = 0
+    moveRight = 0
+
+    
+    ajuda = 0
+    velo = 4 
+    contador = 0
+
+    score.text = "0"
+    score.y = -18
+
+    gamerover.alpha = 0
+
+    
+
+
+
+end
+
+
+local j=1
+for j=1, #buttons do
+    buttons[j]:addEventListener("touch", touchFunction)
+end
+
+
+gamerover:addEventListener("tap", reiniciar)
+
+
+
 function movimento()
-    ajuda = ajuda + velo
-        
-    if ajuda > 190 then
-        contador = contador + 1
-        velo = velo + 0.1
-        score.text = contador
-        ajuda = 0 
-        if velo >= 35 then
-        	velo = 35
+    if estadodejogo == 1 then
+        estadodejogo = 0
+    end
+
+    if estadodejogo == 0 then 
+        ajuda = ajuda + velo
+            
+        if ajuda > 190 then
+            contador = contador + 1
+            velo = velo + 0.1
+            score.text = contador
+            ajuda = 0 
+            if velo >= 35 then
+            	velo = 35
+            end
         end
+        
+        posicaoFundoY = posicaoFundoY + velo
+        background.y = posicaoFundoY
+        
+
+        --movimentaçaodas pedras 
+     
+        pedra[1].y = pedra[1].y + velo 
+        pedra[2].y = pedra[2].y + velo 
+        pedra[3].y = pedra[3].y + velo 
+
+
+        -- analisando se alguma pedra saiu da tela
+        local j = 1
+        for j=1, #pedra do 
+
+        	if pedra[j].y > display.contentHeight + 300 then
+        		replicacao(j)
+        	end
+
+        end
+
+            if background.y > 1500 then
+                posicaoFundoY = 500
+            end
     end
-    
-    posicaoFundoY = posicaoFundoY + velo
-    background.y = posicaoFundoY
-    
 
-    --movimentaçaodas pedras 
- 
-    pedra[1].y = pedra[1].y + velo 
-    pedra[2].y = pedra[2].y + velo 
-    pedra[3].y = pedra[3].y + velo 
+    if estadodejogo == 66 then
+        gamerover.alpha = 1
+        gamerover.x = display.contentCenterX
+        gamerover.y = display.contentCenterY
 
-
--- analisando se alguma pedra saiu da tela
-local j = 1
-for j=1, #pedra do 
-
-	if pedra[j].y > display.contentHeight + 300 then
-		replicacao(j)
-	end
-
+        score.y = display.contentCenterY + 130
+    end 
 end
 
-    if background.y > 1500 then
-        posicaoFundoY = 500
-    end
-
-
-end
 
 --funcao
 function onCollision( event)
-    
-		if ("began" == event.phase) then
-			if(event.object1.myName == "player" and event.object2.myName == "pedra" or event.object1.myName == "pedra" and event.object2.myName == "player") then
-               gotoMenu()
-            end
-        end
+    if estadodejogo == 0 then
+        print("algo")
+        estadodejogo = 66
+    end 
  end
 --
 
@@ -226,6 +303,7 @@ function onCollision( event)
 
 end
  
+
  
 -- show()
 function scene:show( event )
@@ -236,7 +314,8 @@ function scene:show( event )
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
  
-    elseif ( phase == "did" ) then
+    elseif ( phase == "did" ) and estadodejogo == 0 then
+
         -- Code here runs when the scene is entirely on screen
         timer.performWithDelay(1000, pedraRandom, -1)
         Runtime:addEventListener("enterFrame", movimento)
