@@ -6,10 +6,12 @@ local physics = require( "physics" )
 physics.start()
 
 display.setStatusBar(display.HiddenStatusBar)
+
 local estadodejogo = 0
 local player
 local obj1
 local obj2
+
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
 function gotoMenu()
@@ -26,7 +28,7 @@ function scene:create( event )
 
 -- backgrund
 local posicaoFundoY = 500
-local background = display.newImageRect( "background.png", 800,3500 )
+local background = display.newImageRect( "background.png", 2500,4300 )
 background.x = display.contentCenterX
 background.y = posicaoFundoY
 
@@ -41,6 +43,7 @@ player.myName = "player"
 
 
 
+    
 local  function posicaoHorizontalPedra()
 
 	local x = math.random(1,3)
@@ -59,7 +62,6 @@ local  function posicaoHorizontalPedra()
 
 	end
 
---physics.setDrawMode("hybrid")
 
 local function posicaoVerticalPedra()
 
@@ -139,32 +141,19 @@ local moveLeft = 0
 local moveRight = 0
 
 local touchFunction = function(e)
-    
-    if e.target.myName == "right" then     
-        moveRight = 10
-         player.x = player.x + moveRight
-    else
-        moveLeft = -10
-        player.x = player.x + moveLeft
-    end
-
     if e.phase == "began"  then
         if e.target.myName == "right" then
-            moveRight = 10
-             player.x = player.x + moveRight
+            moveRight = 30
+            if player.x < 600 then
+                player.x = player.x + moveRight
+            end
         else
-            moveLeft = -10
-            player.x = player.x + moveLeft
+            moveLeft = -30
+            if player.x > 150 then
+                player.x = player.x + moveLeft
+            end    
         end
-    elseif e.phase == "moved"  then
-        if e.target.myName == "right" then     
-            moveRight = 10
-             player.x = player.x + moveRight
-        else
-            moveLeft = -10
-            player.x = player.x + moveLeft
-        end
-    end
+    end        
 end
 
 local gamerover = display.newImage("gamerover.png")
@@ -220,9 +209,6 @@ function reiniciar( ... )
     gamerover.alpha = 0
 
     
-
-
-
 end
 
 
@@ -293,8 +279,10 @@ end
 --funcao
 function onCollision( event)
     if estadodejogo == 0 then
-        print("algo")
+        local collisionSound =audio.loadSound( "batida.mp3" )
+        audio.play( collisionSound )
         estadodejogo = 66
+            
     end 
  end
 --

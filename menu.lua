@@ -7,6 +7,7 @@ local scene = composer.newScene()
 
 local function gotoGame()
 	composer.gotoScene("game")
+    audio.pause( backgroundMusicChannel )
 	end
 
 
@@ -23,21 +24,27 @@ function scene:create( event )
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
-    local background = display.newImageRect( sceneGroup, "backgroundmenu.jpg", 800, 1400 )
+    local background = display.newImageRect( sceneGroup, "backgroundmenu.jpg", 1000, 1400 )
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 
-    local title = display.newImageRect( sceneGroup, "titulo.png", 700, 200 )
+    local title = display.newImageRect( sceneGroup, "logo.png", 800, 400 )
     title.x = display.contentCenterX
-    title.y = display.contentHeight - 1050
+    title.y = display.contentHeight -900
+    
+    local carroMenu = display.newImageRect( sceneGroup, "carroMenu.jpg", 700, 300 )
+    carroMenu.x = display.contentCenterX
+    carroMenu.y = display.contentHeight -450
+    
+    local backgroundMusic = audio.loadStream( "somFundo.mp3" )
+    audio.play( backgroundMusic )
+    audio.rewind( backgroundMusic )
 
-    local playButton =  display.newImageRect( sceneGroup, "play.png", 500, 100 )
+    local playButton =  display.newImageRect( sceneGroup, "PLAY.png", 600, 200 )
     playButton.x = display.contentCenterX
-    playButton.y = display.contentHeight -100
+    playButton.y = display.contentHeight -150
+    
  
-    --local highScoresButton = display.newText( sceneGroup, "High Scores", display.contentCenterX, 200, native.systemFont, 44 )
-    --highScoresButton:setFillColor( 0.75, 0.78, 1 )
-
     playButton:addEventListener("tap", gotoGame)
 
  
